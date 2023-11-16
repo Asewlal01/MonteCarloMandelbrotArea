@@ -119,46 +119,40 @@ def orthogonalSampling_h(low, high, iterations, samples):
     """
 
     # Total area
-    total = (high - low)**2
+    total = (high - low) ** 2
 
-    # Cuberoot of samples should be an integer to make subgrids
-    sqr = np.ceil(samples**(1 / 3)).astype(int)
+    # Samples has to be a perfect square
+    sqr = int(np.floor(np.sqrt(samples)))
+    samples = sqr ** 2
 
-    # Step size
-    step = (high - low) / sqr
+    # Create array with minor columns
+    columns = np.linspace(low, high, samples)
 
-    # Step size in subgrids
-    substep = step / (sqr - 1)
+    # Randomly shuffle minor columns
+    np.random.shuffle(columns)
+
+    # Creating major rows
+    rows = np.linspace(low, high, sqr + 1)
 
     # Number of points that are within mandelbrot set during the run
     N_h = np.zeros(iterations)
 
-    # Looping through subgrids
-    for i in range(sqr):
-        # Lowest point of subgrid on horizontal axis
-        sublow_x = i * step + low
+    # Looping through each major row
+    for i in range(len(rows) - 1):
+        # Creating array with minor rows in current row
+        minorrow = np.linspace(rows[i], rows[i + 1], sqr, endpoint=False)
 
-        for j in range(sqr):
-            # Lowest point of subgrid on vertical axis
-            sublow_y = j * step + low
+        # Shuffling minor row
+        np.random.shuffle(minorrow)
 
-            # Create array with positions
-            positions = np.arange(sqr)
+        # Looping through each minor row
+        for j in range(len(minorrow)):
+            # Create complex number
+            c = columns[sqr * i + j] + 1j * minorrow[j]
 
-            # Shuffling positions
-            np.random.shuffle(positions)
-
-            for ii, jj in enumerate(positions):
-                # Convert i,j to a complex value a+bi
-                a = ii * substep + sublow_x
-                b = jj * substep + sublow_y
-
-                # Compute c
-                c = a + 1j * b
-
-                # Add to mandelbrot area if in set
-                for curr_iter in range(iterations):
-                    N_h[curr_iter] += inMandelbrotSet(c, curr_iter)
+            # Add to mandelbrot area if in set
+            for curr_iter in range(iterations):
+                N_h[curr_iter] += inMandelbrotSet(c, curr_iter)
 
     # Compute area history
     A_h = total * N_h / samples
