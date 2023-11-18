@@ -34,7 +34,6 @@ def quasiMC(low, high, iterations, samples):
     for e in c:
     # Add to mandelbrot area if in set
         N += inMandelbrotSet(e, iterations)
-    print(N)
 
     # Compute area of mandelbrot set
     mandelbrot = total * N / samples
