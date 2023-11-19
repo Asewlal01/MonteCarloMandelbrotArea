@@ -23,16 +23,16 @@ def quasiMC(low, high, iterations, samples):
 
     # Generating Sobol sequence between low and high
     sobol_seq = qmc.Sobol(d=2)
-    seq = (high - low)*sobol_seq.random(n=samples) + low
+    seq = (high - low) * sobol_seq.random(n=samples) + low
 
     real = seq[:, 0]
     imag = seq[:, 1]
 
     # Calculate c
     c = real + 1j * imag
-    
+
     for e in c:
-    # Add to mandelbrot area if in set
+        # Add to mandelbrot area if in set
         N += inMandelbrotSet(e, iterations)
 
     # Compute area of mandelbrot set
