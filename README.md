@@ -24,3 +24,5 @@ Mandelbrot set
 from a square, a circle is used
 - ColorfulMandelbrotSet.py: Functions used to generate a Mandelbrot set on the complex plane with colors
 
+Other .py and .ipynb files within this repository are not used anymore, as they were methods that did not show
+expected behaviour.
